@@ -118,14 +118,25 @@
             return;
         }
         
-        listContainer.innerHTML = filteredCases.map(caseItem => `
-            <div class="case-list-item ${caseItem.id === selectedCaseId ? 'selected' : ''}" 
-                 data-case-id="${caseItem.id}"
-                 onclick="window.caseExplorer.selectCase('${caseItem.id}')">
-                <div class="case-id">Transaction ${caseItem.txn_id}</div>
-                <div class="case-preview">${truncate(caseItem.recommended_action, 40)}</div>
-            </div>
-        `).join('');
+        listContainer.innerHTML = '';
+        filteredCases.forEach(caseItem => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `case-list-item ${caseItem.id === selectedCaseId ? 'selected' : ''}`;
+            itemDiv.dataset.caseId = caseItem.id;
+            itemDiv.addEventListener('click', () => selectCase(caseItem.id));
+            
+            const idDiv = document.createElement('div');
+            idDiv.className = 'case-id';
+            idDiv.textContent = `Transaction ${caseItem.txn_id}`;
+            
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'case-preview';
+            previewDiv.textContent = truncate(caseItem.recommended_action, 40);
+            
+            itemDiv.appendChild(idDiv);
+            itemDiv.appendChild(previewDiv);
+            listContainer.appendChild(itemDiv);
+        });
     }
     
     function selectCase(caseId) {
@@ -137,45 +148,66 @@
         renderCaseDetail(caseData);
     }
     
+    // Helper function to safely escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
     function renderCaseDetail(caseData) {
         const detailContainer = document.getElementById('case-detail');
         if (!detailContainer) return;
         
         const actionClass = getActionClass(caseData.recommended_action);
         
+        // Safely escape all dynamic user content
+        const safeTxnId = escapeHtml(String(caseData.txn_id));
+        const safeAction = escapeHtml(caseData.recommended_action);
+        const safeRiskScore = escapeHtml(caseData.risk_score.toFixed(1));
+        const safeAmount = escapeHtml(String(caseData.evidence.amount_usd));
+        const safeCity = escapeHtml(caseData.evidence.city);
+        const safeCountry = escapeHtml(caseData.evidence.country);
+        const safeTxnCnt = escapeHtml(String(caseData.evidence.txn_cnt_last_24h));
+        const safeMins = escapeHtml(String(caseData.evidence.mins_since_prev_txn));
+        const safeNarrativeGen = escapeHtml(caseData.narrative_generated);
+        const safeNarrativeRef = escapeHtml(caseData.narrative_reference);
+        const safeShapSummary = escapeHtml(caseData.shap_summary);
+        const safePrompt = escapeHtml(caseData.prompt_preview);
+        
         detailContainer.innerHTML = `
             <div class="case-header">
-                <h3>Transaction ${caseData.txn_id}</h3>
+                <h3>Transaction ${safeTxnId}</h3>
                 <div class="case-meta-row">
-                    <span class="action-badge ${actionClass}">${caseData.recommended_action}</span>
+                    <span class="action-badge ${actionClass}">${safeAction}</span>
                     <div class="risk-meter">
                         <div class="risk-meter-label">Risk Score</div>
                         <div class="risk-meter-bar">
                             <div class="risk-meter-fill" style="width: ${caseData.risk_score}%"></div>
-                            <div class="risk-meter-value">${caseData.risk_score.toFixed(1)}</div>
+                            <div class="risk-meter-value">${safeRiskScore}</div>
                         </div>
                     </div>
                 </div>
                 <div class="quick-evidence">
                     <div class="evidence-item">
                         <span class="evidence-label">Amount</span>
-                        <span class="evidence-value">$${caseData.evidence.amount_usd}</span>
+                        <span class="evidence-value">$${safeAmount}</span>
                     </div>
                     <div class="evidence-item">
                         <span class="evidence-label">City</span>
-                        <span class="evidence-value">${caseData.evidence.city}</span>
+                        <span class="evidence-value">${safeCity}</span>
                     </div>
                     <div class="evidence-item">
                         <span class="evidence-label">Country</span>
-                        <span class="evidence-value">${caseData.evidence.country}</span>
+                        <span class="evidence-value">${safeCountry}</span>
                     </div>
                     <div class="evidence-item">
                         <span class="evidence-label">Last 24h Txns</span>
-                        <span class="evidence-value">${caseData.evidence.txn_cnt_last_24h}</span>
+                        <span class="evidence-value">${safeTxnCnt}</span>
                     </div>
                     <div class="evidence-item">
                         <span class="evidence-label">Mins Since Prev</span>
-                        <span class="evidence-value">${caseData.evidence.mins_since_prev_txn}</span>
+                        <span class="evidence-value">${safeMins}</span>
                     </div>
                 </div>
             </div>
@@ -191,18 +223,18 @@
                 <div class="narrative-comparison">
                     <div class="narrative-box">
                         <h4>Generated Narrative</h4>
-                        <p>${caseData.narrative_generated}</p>
+                        <p>${safeNarrativeGen}</p>
                     </div>
                     <div class="narrative-box">
                         <h4>Reference Narrative</h4>
-                        <p>${caseData.narrative_reference}</p>
+                        <p>${safeNarrativeRef}</p>
                     </div>
                 </div>
             </div>
             
             <div id="tab-explainability" class="tab-content">
                 <div class="shap-summary">
-                    <strong>SHAP Summary:</strong> ${caseData.shap_summary}
+                    <strong>SHAP Summary:</strong> ${safeShapSummary}
                 </div>
                 <h4>Top Contributing Features</h4>
                 <div class="shap-bars">
@@ -227,19 +259,23 @@
             <div id="tab-prompt" class="tab-content">
                 <details>
                     <summary>Show Prompt Trace</summary>
-                    <div class="prompt-trace-box">${caseData.prompt_preview}</div>
+                    <div class="prompt-trace-box">${safePrompt}</div>
                 </details>
             </div>
         `;
     }
     
     function renderShapBars(shapPairs) {
+        if (!shapPairs || shapPairs.length === 0) {
+            return '<p style="color: var(--text-light);">No SHAP data available</p>';
+        }
+        
         const maxAbsValue = Math.max(...shapPairs.map(p => Math.abs(p.value)));
         
         return shapPairs.map(pair => {
             const isPositive = pair.value >= 0;
             const absValue = Math.abs(pair.value);
-            const percentage = (absValue / maxAbsValue) * 100;
+            const percentage = maxAbsValue > 0 ? (absValue / maxAbsValue) * 100 : 0;
             const sign = isPositive ? '+' : '';
             const valueClass = isPositive ? 'positive' : 'negative';
             const fillClass = isPositive ? 'positive' : 'negative';
@@ -247,7 +283,7 @@
             return `
                 <div class="shap-bar-item">
                     <div class="shap-bar-label">
-                        <span class="shap-feature">${pair.feature}</span>
+                        <span class="shap-feature">${escapeHtml(pair.feature)}</span>
                         <span class="shap-value ${valueClass}">${sign}${pair.value.toFixed(3)}</span>
                     </div>
                     <div class="shap-bar-track">
@@ -259,12 +295,15 @@
     }
     
     function renderEvidenceTable(evidence) {
-        return Object.entries(evidence).map(([key, value]) => `
-            <tr>
-                <td>${formatFieldName(key)}</td>
-                <td>${value !== null && value !== '' ? value : 'N/A'}</td>
-            </tr>
-        `).join('');
+        return Object.entries(evidence).map(([key, value]) => {
+            const displayValue = value !== null && value !== '' ? String(value) : 'N/A';
+            return `
+                <tr>
+                    <td>${escapeHtml(formatFieldName(key))}</td>
+                    <td>${escapeHtml(displayValue)}</td>
+                </tr>
+            `;
+        }).join('');
     }
     
     function formatFieldName(field) {

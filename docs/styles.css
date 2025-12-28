@@ -16,8 +16,8 @@
     --danger-red: #a05454;
     --info-blue: #5d7a9b;
     
-    /* Typography */
-    --font-serif: 'Crimson Text', 'Georgia', 'Times New Roman', serif;
+    /* Typography - Note: Crimson Text is optional, falls back to Georgia */
+    --font-serif: Georgia, 'Times New Roman', serif;
     --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     --font-mono: 'Courier New', Courier, monospace;
 }
