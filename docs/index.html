@@ -3,884 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Driven Fraud Case Summarizer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Georgia, "Times New Roman", Times, serif;
-            line-height: 1.8;
-            color: #2c3e50;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            padding: 50px 60px;
-            border-radius: 2px;
-        }
-
-        header {
-            border-bottom: 3px solid #2c3e50;
-            padding-bottom: 25px;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-        }
-
-        header h1 {
-            font-size: 2.2em;
-            font-weight: 400;
-            margin-bottom: 12px;
-            color: #2c3e50;
-            letter-spacing: -0.5px;
-        }
-
-        header .subtitle {
-            font-size: 1.05em;
-            color: #6c757d;
-            font-style: italic;
-            margin-bottom: 18px;
-            line-height: 1.6;
-        }
-
-        .nav-links {
-            font-size: 0.9em;
-            color: #6c757d;
-            margin-top: 20px;
-        }
-
-        .nav-links a {
-            color: #3498db;
-            text-decoration: none;
-            margin-right: 18px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: #2980b9;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: #3498db;
-            transition: width 0.2s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        section {
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            font-size: 1.6em;
-            font-weight: 400;
-            margin-bottom: 20px;
-            margin-top: 10px;
-            padding-bottom: 10px;
-            color: #2c3e50;
-            position: relative;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-        }
-
-        h3 {
-            font-size: 1.25em;
-            font-weight: 500;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            color: #2c3e50;
-        }
-
-        h4 {
-            font-size: 1.05em;
-            font-weight: 600;
-            margin-top: 18px;
-            margin-bottom: 10px;
-            color: #34495e;
-        }
-
-        p {
-            margin-bottom: 12px;
-            text-align: justify;
-        }
-
-        ul {
-            margin-left: 30px;
-            margin-bottom: 15px;
-        }
-
-        ul li {
-            margin-bottom: 6px;
-        }
-
-        .abstract {
-            font-size: 0.98em;
-            color: #495057;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border-left: 4px solid #3498db;
-            border-radius: 2px;
-            margin: 30px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .status-line {
-            font-size: 0.9em;
-            color: #6c757d;
-            font-style: italic;
-            margin-bottom: 20px;
-            padding: 14px 18px;
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            border-left: 4px solid #f39c12;
-            border-radius: 2px;
-            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.1);
-        }
-
-        .case-explorer-controls {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #333;
-            font-size: 0.95em;
-        }
-
-        select {
-            width: 100%;
-            padding: 12px 16px;
-            font-family: Georgia, "Times New Roman", Times, serif;
-            font-size: 0.95em;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        select:hover {
-            border-color: #adb5bd;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .case-card {
-            border: 1px solid #e9ecef;
-            padding: 30px;
-            margin-top: 25px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border-radius: 4px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
-        }
-
-        .case-card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .case-card h3 {
-            margin-top: 0;
-            font-weight: 500;
-            color: #2c3e50;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-        }
-
-        .case-narrative {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            line-height: 1.9;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            font-size: 0.96em;
-            color: #495057;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-        }
-
-        .case-narrative.collapsed {
-            max-height: 150px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .case-narrative.collapsed::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(transparent, white);
-        }
-
-        .expand-btn {
-            font-size: 0.85em;
-            color: #3498db;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 6px 0;
-            margin-top: 8px;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .expand-btn:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-
-        .why-flagged {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
-            border-left: 4px solid #e74c3c;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.08);
-        }
-
-        .why-flagged h4 {
-            color: #e74c3c;
-            margin-bottom: 12px;
-        }
-
-        .why-flagged ul {
-            list-style-type: disc;
-            margin-left: 25px;
-        }
-
-        .case-links {
-            margin-top: 18px;
-            font-size: 0.9em;
-            padding-top: 15px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .case-links a {
-            color: #3498db;
-            text-decoration: none;
-            margin-right: 15px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .case-links a:hover {
-            color: #2980b9;
-        }
-
-        .case-links a::before {
-            content: '→ ';
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .case-links a:hover::before {
-            opacity: 1;
-        }
-
-        button {
-            font-family: Georgia, "Times New Roman", Times, serif;
-            font-size: 0.9em;
-            padding: 10px 20px;
-            border: 2px solid #dee2e6;
-            background: white;
-            color: #495057;
-            cursor: pointer;
-            margin-top: 15px;
-            margin-right: 10px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        button:hover {
-            background: #3498db;
-            border-color: #3498db;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .code-block {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-left: 4px solid #6c757d;
-            border-radius: 4px;
-            overflow-x: auto;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .code-block code {
-            display: block;
-            white-space: pre;
-            line-height: 1.6;
-            color: #495057;
-        }
-
-        details {
-            margin: 25px 0;
-            border: 1px solid #e9ecef;
-            padding: 20px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
-        }
-
-        details:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        summary {
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 1.15em;
-            color: #2c3e50;
-            padding: 5px 0;
-            transition: all 0.2s ease;
-            list-style: none;
-            position: relative;
-            padding-left: 25px;
-        }
-
-        summary::-webkit-details-marker {
-            display: none;
-        }
-
-        summary::before {
-            content: '▶';
-            position: absolute;
-            left: 0;
-            color: #3498db;
-            transition: transform 0.3s ease;
-        }
-
-        details[open] summary::before {
-            transform: rotate(90deg);
-        }
-
-        summary:hover {
-            color: #3498db;
-        }
-
-        details[open] summary {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
-            color: #e74c3c;
-            padding: 18px;
-            border-left: 4px solid #e74c3c;
-            border-radius: 4px;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1);
-        }
-
-        .loading-message {
-            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
-            color: #2980b9;
-            padding: 18px;
-            border-left: 4px solid #3498db;
-            text-align: center;
-            margin: 20px 0;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
-        }
-
-        footer {
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 2px solid #e9ecef;
-            text-align: center;
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        footer a {
-            color: #3498db;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        footer a:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 6px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-size: 0.9em;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(-10px);
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-
-            .container {
-                padding: 30px 25px;
-            }
-
-            header h1 {
-                font-size: 1.6em;
-            }
-
-            header .subtitle {
-                font-size: 1em;
-            }
-
-            .nav-links {
-                font-size: 0.85em;
-            }
-
-            .nav-links a {
-                display: inline-block;
-                margin-bottom: 5px;
-            }
-        }
-    </style>
+    <title>AI-Driven Fraud Case Summarizer – Demo</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>AI-Driven Fraud Case Summarizer</h1>
-            <p class="subtitle">From transaction signals to investigation-ready narratives (XGBoost + SHAP + Flan-T5)</p>
+            <p class="subtitle">Natural-language case briefs help investigators make fast, correct calls. SHAP makes the rationale transparent.</p>
             <div class="nav-links">
-                <a href="https://pranshu-dhingra.github.io/">Back to portfolio</a>
-                <a href="https://pranshu-dhingra.github.io/projects.html">Projects</a>
-                <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer">Repository</a>
-                <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/src">Source (src/)</a>
+                <a href="https://pranshu-dhingra.github.io/">Back to Portfolio</a>
+                <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer">Repo</a>
+                <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/src">Code (src/)</a>
                 <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/outputs">Outputs</a>
+                <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/blob/main/README.md">README</a>
             </div>
         </header>
 
         <main>
-        <section id="abstract">
-            <h2>Abstract</h2>
-            <div class="abstract">
-                <p>This work presents an end-to-end pipeline that transforms structured fraud detection outputs into human-readable case summaries using interpretable machine learning and small language models. We combine XGBoost anomaly classification with SHAP (SHapley Additive exPlanations) for local interpretability, converting quantitative feature attributions into natural language silver labels. These enriched explanations serve as training signals for a fine-tuned Flan-T5 model, which generates investigation-ready fraud narratives complete with risk assessments and actionable recommendations for fraud analysts.</p>
-            </div>
-        </section>
+            <section id="abstract">
+                <h2>Abstract</h2>
+                <div class="abstract">
+                    <p>This work presents an end-to-end pipeline that transforms structured fraud detection outputs into human-readable case summaries using interpretable machine learning and small language models. We combine XGBoost anomaly classification with SHAP (SHapley Additive exPlanations) for local interpretability, converting quantitative feature attributions into natural language silver labels. These enriched explanations serve as training signals for a fine-tuned Flan-T5 model, which generates investigation-ready fraud narratives complete with risk assessments and actionable recommendations for fraud analysts.</p>
+                </div>
+            </section>
 
-        <section id="case-explorer">
-            <h2>Case Explorer</h2>
-            <div class="status-line" id="status-line">Loading cases from repository outputs...</div>
-            
-            <div class="case-explorer-controls">
-                <label for="case-select">Select a case:</label>
-                <select id="case-select">
-                    <option value="">Loading...</option>
-                </select>
-            </div>
+            <section id="case-explorer">
+                <h2>Case Explorer</h2>
+                <div class="case-explorer-wrapper">
+                    <!-- Left column: Case list with filters -->
+                    <div class="case-list-panel">
+                        <div class="filters">
+                            <h4>Filter by Risk</h4>
+                            <div class="filter-chips">
+                                <button class="filter-chip active" data-filter="all">All</button>
+                                <button class="filter-chip" data-filter="high">High Risk</button>
+                                <button class="filter-chip" data-filter="hold">Needs Review</button>
+                                <button class="filter-chip" data-filter="review">Priority Review</button>
+                                <button class="filter-chip" data-filter="low">Low Risk</button>
+                            </div>
+                        </div>
+                        
+                        <div class="search-box">
+                            <label for="search-input">Search</label>
+                            <input type="text" id="search-input" placeholder="Transaction ID, city...">
+                        </div>
+                        
+                        <div id="case-list" class="case-list">
+                            <p class="loading">Loading cases...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Right column: Case detail -->
+                    <div class="case-detail-panel">
+                        <div id="case-detail">
+                            <p class="loading">Select a case to view details</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            <div id="case-display"></div>
-        </section>
+            <details id="how-it-works">
+                <summary>How It Works</summary>
+                <p>The pipeline consists of six primary stages:</p>
+                <ul>
+                    <li><strong>Data Ingestion & Feature Engineering:</strong> Card transaction data undergoes comprehensive preprocessing, extracting temporal patterns, merchant analytics, velocity metrics, and customer behavior profiles.</li>
+                    <li><strong>Anomaly Detection:</strong> XGBoost classifier trained on historical fraud patterns identifies suspicious transactions with high precision, producing probability scores for each transaction.</li>
+                    <li><strong>Explainability via SHAP:</strong> SHAP values quantify each feature's contribution to the fraud score, providing both local (per-transaction) and global (dataset-level) interpretability.</li>
+                    <li><strong>Silver Labeling:</strong> SHAP outputs are systematically converted into structured natural language descriptions, creating pseudo-labels that bridge quantitative signals and linguistic explanations.</li>
+                    <li><strong>SLM Fine-Tuning:</strong> Flan-T5 (a small, efficient transformer) is fine-tuned on SHAP-enriched examples to generate contextual fraud case narratives that synthesize risk factors into coherent investigative summaries.</li>
+                    <li><strong>Output Generation:</strong> The trained model produces investigation-ready narratives, SHAP visualizations, and structured metadata for review by fraud analysts and audit systems.</li>
+                </ul>
+            </details>
 
-        <details id="methods">
-            <summary>Methods</summary>
-            <p>The pipeline consists of six primary stages:</p>
-            <ul>
-                <li><strong>Data Ingestion & Feature Engineering:</strong> Card transaction data undergoes comprehensive preprocessing, extracting temporal patterns, merchant analytics, velocity metrics, and customer behavior profiles.</li>
-                <li><strong>Anomaly Detection:</strong> XGBoost classifier trained on historical fraud patterns identifies suspicious transactions with high precision, producing probability scores for each transaction.</li>
-                <li><strong>Explainability via SHAP:</strong> SHAP values quantify each feature's contribution to the fraud score, providing both local (per-transaction) and global (dataset-level) interpretability.</li>
-                <li><strong>Silver Labeling:</strong> SHAP outputs are systematically converted into structured natural language descriptions, creating pseudo-labels that bridge quantitative signals and linguistic explanations.</li>
-                <li><strong>SLM Fine-Tuning:</strong> Flan-T5 (a small, efficient transformer) is fine-tuned on SHAP-enriched examples to generate contextual fraud case narratives that synthesize risk factors into coherent investigative summaries.</li>
-                <li><strong>Output Generation:</strong> The trained model produces investigation-ready narratives, SHAP visualizations, and structured metadata for review by fraud analysts and audit systems.</li>
-            </ul>
-        </details>
-
-        <section id="reproducibility">
-            <h2>Reproducibility</h2>
-            <p>The complete pipeline can be reproduced by executing the following modules in sequence:</p>
-            <div class="code-block">
-                <code>python -m src.data_preprocessing
+            <section id="reproducibility">
+                <h2>Reproducibility</h2>
+                <p>The complete pipeline can be reproduced by executing the following modules in sequence:</p>
+                <div class="code-block">python -m src.data_preprocessing
 python -m src.feature_engineering
 python -m src.anomaly_labeling
 python -m src.xgb_interpret
 python -m src.shap_enrichment
 python -m src.slm_train
-python -m src.inference</code>
-            </div>
-            <p>Alternatively, run the provided shell script: <code>bash run_pipeline.sh</code></p>
-            <p>Generated narratives and artifacts will be saved in the <code>outputs/</code> directory.</p>
-        </section>
+python -m src.inference</div>
+                <p>Alternatively, run the provided shell script: <strong><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/blob/main/run_pipeline.sh">run_pipeline.sh</a></strong></p>
+                <p>Generated narratives and artifacts will be saved in the <strong><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/outputs">outputs/</a></strong> directory. Source code for each stage is available in <strong><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/src">src/</a></strong>.</p>
+            </section>
 
-        <section id="repository">
-            <h2>Repository Map</h2>
-            <ul>
-                <li><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer">README</a> – Project overview and setup instructions</li>
-                <li><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/src">src/</a> – Pipeline modules (preprocessing, XGBoost, SHAP, SLM training, inference)</li>
-                <li><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/outputs">outputs/</a> – Generated case narratives and artifacts</li>
-                <li><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/data">data/</a> – Raw and processed transaction datasets</li>
-                <li><a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/models">models/</a> – Saved XGBoost and Flan-T5 checkpoints</li>
-            </ul>
-        </section>
-
-        <section id="references">
-            <h2>References</h2>
-            <ul>
-                <li>Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. <em>NeurIPS</em>.</li>
-                <li>Chung, H. W., et al. (2022). Scaling Instruction-Finetuned Language Models. <em>arXiv preprint</em>.</li>
-                <li>Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting system. <em>KDD</em>.</li>
-            </ul>
-        </section>
-
+            <section id="references">
+                <h2>References</h2>
+                <ul>
+                    <li>Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. <em>NeurIPS</em>.</li>
+                    <li>Chung, H. W., et al. (2022). Scaling Instruction-Finetuned Language Models. <em>arXiv preprint</em>.</li>
+                    <li>Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting system. <em>KDD</em>.</li>
+                </ul>
+            </section>
         </main>
 
         <footer>
-            <p>Static demo hosted on GitHub Pages • <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer">View Repository</a> • <a href="https://pranshu-dhingra.github.io/">Back to portfolio</a></p>
+            <p>Static demo hosted on GitHub Pages • <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer">View Repository</a> • <a href="https://pranshu-dhingra.github.io/">Back to Portfolio</a></p>
+            <div class="disclaimer">
+                Demo uses curated sample outputs; see <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/outputs">outputs/</a> for artifacts and pipeline code in <a href="https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/tree/main/src">src/</a>.
+            </div>
         </footer>
     </div>
 
-    <div id="toast" class="toast"></div>
-
-    <script>
-        // Configuration constants
-        const MAX_CASE_FILES = 5;
-        const NARRATIVE_COLLAPSE_THRESHOLD = 500;
-        
-        let casesData = [];
-        let usingFallback = false;
-
-        // GitHub API configuration
-        const GITHUB_API = 'https://api.github.com/repos/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/contents/outputs';
-        const REPO_BASE = 'https://github.com/pranshu-dhingra/AI-Driven-Fraud-Case-Summarizer/blob/main/outputs';
-
-        // Load cases on page load
-        async function loadCases() {
-            try {
-                updateStatus('Fetching case files from outputs/ via GitHub API...');
-                const files = await fetchOutputFiles();
-                
-                if (files && files.length > 0) {
-                    updateStatus(`Found ${files.length} files in outputs/. Selecting representative cases...`);
-                    const cases = await buildCasesFromFiles(files);
-                    
-                    if (cases.length > 0) {
-                        casesData = cases;
-                        updateStatus(`Loaded ${cases.length} cases from outputs/`);
-                        populateDropdown();
-                        if (casesData.length > 0) {
-                            displayCase(casesData[0]);
-                        }
-                        return;
-                    }
-                }
-                
-                // If we get here, fall back
-                throw new Error('No valid cases found in outputs/');
-                
-            } catch (error) {
-                console.error('Error loading from GitHub API:', error);
-                await loadFallbackCases();
-            }
-        }
-
-        async function fetchOutputFiles() {
-            try {
-                const response = await fetch(GITHUB_API);
-                if (!response.ok) {
-                    throw new Error(`GitHub API returned ${response.status}`);
-                }
-                const data = await response.json();
-                
-                // Filter for text files and spreadsheets
-                const files = data.filter(item => {
-                    const name = item.name.toLowerCase();
-                    return item.type === 'file' && 
-                           (name.endsWith('.txt') || name.endsWith('.md') || 
-                            name.endsWith('.json') || name.endsWith('.xlsx'));
-                });
-                
-                return files;
-            } catch (error) {
-                console.error('Failed to fetch from GitHub API:', error);
-                return null;
-            }
-        }
-
-        async function buildCasesFromFiles(files) {
-            const cases = [];
-            // Select up to MAX_CASE_FILES representative files
-            const selectedFiles = files.slice(0, MAX_CASE_FILES);
-            
-            for (const file of selectedFiles) {
-                try {
-                    // For .xlsx files, we can't easily parse them, so just create a reference
-                    if (file.name.endsWith('.xlsx')) {
-                        const caseId = file.name.replace(/\.(xlsx|xls)$/i, '');
-                        cases.push({
-                            id: caseId,
-                            title: humanizeFilename(file.name),
-                            narrative: `This file contains tabular fraud case data. Download the file to view detailed case information, SHAP values, and model predictions. The spreadsheet includes structured data from the AI pipeline's inference stage.`,
-                            links: {
-                                output: `${REPO_BASE}/${file.name}`,
-                                raw: file.download_url
-                            }
-                        });
-                    } else if (file.download_url && (file.name.endsWith('.txt') || file.name.endsWith('.md'))) {
-                        // Fetch text content
-                        const content = await fetchFileContent(file.download_url);
-                        if (content && content.trim().length > 0) {
-                            const caseId = file.name.replace(/\.(txt|md)$/i, '');
-                            cases.push({
-                                id: caseId,
-                                title: humanizeFilename(file.name),
-                                narrative: content.trim(),
-                                links: {
-                                    output: `${REPO_BASE}/${file.name}`,
-                                    raw: file.download_url
-                                }
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.error(`Failed to process file ${file.name}:`, error);
-                }
-            }
-            
-            return cases;
-        }
-
-        async function fetchFileContent(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch ${url}`);
-                }
-                const text = await response.text();
-                return text;
-            } catch (error) {
-                console.error('Failed to fetch file content:', error);
-                return null;
-            }
-        }
-
-        function humanizeFilename(filename) {
-            // Remove extension
-            let name = filename.replace(/\.(txt|md|json|xlsx|xls)$/i, '');
-            // Replace underscores and hyphens with spaces
-            name = name.replace(/[_-]/g, ' ');
-            // Title case
-            name = name.split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ');
-            return name;
-        }
-
-        async function loadFallbackCases() {
-            try {
-                updateStatus('Live outputs could not be loaded; showing fallback examples.');
-                usingFallback = true;
-                
-                const response = await fetch('./cases.fallback.json');
-                if (!response.ok) {
-                    throw new Error('Failed to load fallback cases');
-                }
-                casesData = await response.json();
-                populateDropdown();
-                
-                if (casesData.length > 0) {
-                    displayCase(casesData[0]);
-                }
-            } catch (error) {
-                console.error('Error loading fallback cases:', error);
-                displayError('Failed to load case data. Please check that the demo files are accessible.');
-            }
-        }
-
-        function updateStatus(message) {
-            const statusLine = document.getElementById('status-line');
-            statusLine.textContent = message;
-        }
-
-        function populateDropdown() {
-            const select = document.getElementById('case-select');
-            select.innerHTML = '<option value="">-- Select a case --</option>';
-            
-            casesData.forEach((caseItem, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${caseItem.id}: ${caseItem.title}`;
-                select.appendChild(option);
-            });
-
-            // Set first case as selected
-            if (casesData.length > 0) {
-                select.value = '0';
-            }
-
-            select.addEventListener('change', (e) => {
-                const index = e.target.value;
-                if (index !== '') {
-                    displayCase(casesData[index]);
-                } else {
-                    document.getElementById('case-display').innerHTML = '';
-                }
-            });
-        }
-
-        function displayCase(caseItem) {
-            const display = document.getElementById('case-display');
-            
-            // Check if narrative is long (more than NARRATIVE_COLLAPSE_THRESHOLD chars)
-            const isLong = caseItem.narrative.length > NARRATIVE_COLLAPSE_THRESHOLD;
-            const narrativeClass = isLong ? 'case-narrative collapsed' : 'case-narrative';
-            const narrativeId = `narrative-${caseItem.id}`;
-            
-            let whyFlaggedSection = '';
-            if (caseItem.why_flagged && caseItem.why_flagged.length > 0) {
-                whyFlaggedSection = `
-                    <div class="why-flagged">
-                        <h4>Why This Transaction Was Flagged</h4>
-                        <ul>
-                            ${caseItem.why_flagged.map(reason => `<li>${reason}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            const html = `
-                <div class="case-card">
-                    <h3>${caseItem.title}</h3>
-                    
-                    <h4>Generated Narrative</h4>
-                    <div class="${narrativeClass}" id="${narrativeId}">
-                        ${caseItem.narrative}
-                    </div>
-                    ${isLong ? `<button class="expand-btn" onclick="toggleNarrative('${narrativeId}', this)">Show more</button>` : ''}
-
-                    ${whyFlaggedSection}
-
-                    <div class="case-links">
-                        <a href="${caseItem.links.output}" target="_blank">View output in repo</a>
-                        <a href="${caseItem.links.raw}" target="_blank">View raw file</a>
-                    </div>
-
-                    <button onclick="copyNarrative('${caseItem.id}')">Copy narrative</button>
-                </div>
-            `;
-            
-            display.innerHTML = html;
-        }
-
-        function toggleNarrative(narrativeId, button) {
-            const narrative = document.getElementById(narrativeId);
-            const isCollapsed = narrative.classList.contains('collapsed');
-            
-            if (isCollapsed) {
-                narrative.classList.remove('collapsed');
-                button.textContent = 'Show less';
-            } else {
-                narrative.classList.add('collapsed');
-                button.textContent = 'Show more';
-            }
-        }
-
-        function displayError(message) {
-            const display = document.getElementById('case-display');
-            display.innerHTML = `
-                <div class="error-message">
-                    <strong>Error:</strong> ${message}
-                </div>
-            `;
-        }
-
-        function copyNarrative(caseId) {
-            const caseItem = casesData.find(c => c.id === caseId);
-            if (!caseItem) return;
-
-            const textToCopy = `${caseItem.title}\n\n${caseItem.narrative}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Narrative copied to clipboard');
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                showToast('Failed to copy narrative');
-            });
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', loadCases);
-    </script>
+    <script src="./app.js"></script>
 </body>
 </html>
