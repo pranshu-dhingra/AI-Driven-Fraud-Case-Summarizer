@@ -341,7 +341,7 @@
     function showError(message) {
         const detailContainer = document.getElementById('case-detail');
         if (detailContainer) {
-            detailContainer.innerHTML = `<div class="error">${message}</div>`;
+            detailContainer.innerHTML = `<div class="error">${escapeHtml(message)}</div>`;
         }
     }
     
